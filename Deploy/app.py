@@ -20,7 +20,6 @@ selecionar_primeira_selecao = st.selectbox('Primeira Seleção', todas_selecoes)
 selecao_b = df_selecoes[df_selecoes['Selecoes'] != selecionar_primeira_selecao]
 selecionar_segunda_selecao = st.selectbox('Segunda Seleção', selecao_b)
 
-
 model = joblib.load('model.pkl')
 
 
@@ -38,12 +37,11 @@ def predicao(timeA, timeB):
 
   x = np.array([idA, idB, campeaoA, campeaoB]).astype('float64')
   x = np.reshape(x, (1,-1))
-  _y = svm_model.predict_proba(x)[0]
+  _y = model.predict_proba(x)[0]
 
   text = ('Chance de ' +timeA+' vencer '+timeB+' é {}\nChance de '+timeB+' vencer '+timeA+' e {}\nChance de '+timeA+' e '+timeB+' empatar é {}').format(_y[1]*100,_y[2]*100,_y[0]*100)
   return _y[0], text
 
-  prob1, text1 = predicao(selecionar_primeira_selecao, selecionar_segunda_selecao)
-
+prob1, text1 = predicao (selecionar_primeira_selecao, selecionar_segunda_selecao)
 if st.button('Realizar Predição do Jogo'):
     st.text(text1)
